@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Protocol
 
@@ -125,7 +126,9 @@ class JsonSolicitudRepository:
                 "area": solicitud.responsable.area,
             }
             if solicitud.responsable else None,
-            "fecha_creacion": solicitud.fecha_creacion,
+            # CORRECCIÓN DE SENIOR: Delegamos la conversión a la capa de infraestructura
+            # utilizando el estándar ISO 8601, ideal para sistemas distribuidos y APIs.
+            "fecha_creacion": solicitud.fecha_creacion.isoformat(),
         }
 
     @staticmethod
@@ -148,5 +151,6 @@ class JsonSolicitudRepository:
             responsable=Responsable(
                 nombre=resp_data["nombre"], area=resp_data["area"]
             ) if resp_data else None,
-            fecha_creacion=data["fecha_creacion"],
+            # CORRECCIÓN DE SENIOR: Reconstrucción segura del objeto nativo.
+            fecha_creacion=datetime.fromisoformat(data["fecha_creacion"]),
         )

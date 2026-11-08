@@ -105,9 +105,10 @@ class Solicitud:
     descripcion: str
     estado: EstadoSolicitud = EstadoSolicitud.PENDIENTE
     responsable: Optional[Responsable] = None
-    fecha_creacion: str = field(
-        default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    )
+    
+    # CORRECCIÓN DE SENIOR: Uso de objeto nativo en lugar de string (Evita Primitive Obsession).
+    # La presentación o serialización de este dato no es responsabilidad de la entidad.
+    fecha_creacion: datetime = field(default_factory=datetime.now)
 
     def asignar_responsable(self, nuevo_responsable: Responsable) -> None:
         """
